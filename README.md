@@ -35,18 +35,54 @@ You can pass another view to show inside on choosen element
 
 ```js
 let view = new View({
-        rootEl: this.rootEl,
-        ui: {
-          uiElement: '.ui-element'
-        },
-        template: '<div><div class="ui-element"></div></div>'
-      }),
-      childView = new View({
-        template: '<div></div>'
-      })
+    rootEl: this.rootEl,
+      ui: {
+      uiElement: '.ui-element'
+    },
+    template: '<div><div class="ui-element"></div></div>'
+  }),
+  childView = new View({
+    template: '<div></div>'
+  }
+  view.render()
+  view.showChild('uiElement', childView)
+  // HTML: '<div><div class="ui-element"><div></div></div></div>'
+```
+You can remove child view by selecting ui element or passing child View object
+```js
+view.removeChild('uiElement')
+```
 
-      view.render()
-      view.showChild('uiElement', this.childView)
+```js
+view.removeChild(childView)
 ```
 
 View should show childView inside '.ui-element'. Remember you can show child views only in rendered views.
+
+
+### Template 
+
+You can use ```<$variable>``` syntax to pass data into template.
+Data for template comes from View.templateData or from view.model.
+
+```js
+let view.model = new Model({
+    name: 'John',
+    getSurname: function () {
+      let variable = {
+        el: 'Brand'
+      }
+      return variable['el']
+    },
+    proffesion: {
+      name: 'Plumber'
+    }
+  })
+  view.template = '<div><div class="ui-element"><$name> <$getSurname()> <$proffesion.name></div></div>'
+  view.render()
+  // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
+```
+
+## More
+
+Look test folder for more examples
