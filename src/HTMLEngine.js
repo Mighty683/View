@@ -3,7 +3,8 @@ function findKeys (string, callback) {
 }
 
 function replaceKeys (data, _, code) {
-  let newCode = code
+  let doEscape = _.substring(0, 3) === '<$_'
+  let newCode = doEscape ? code.slice(1) : code
   let variables = Object.keys(data).map(function (key) {
     let dataString = typeof data[key] === 'function' ? data[key] : JSON.stringify(data[key])
     return key + ' = ' + dataString
@@ -13,9 +14,30 @@ function replaceKeys (data, _, code) {
   }
   try {
     /* eslint-disable */
-    return new Function('', 'let ' + variables + '\nreturn ' + newCode)()
+    let fun = new Function('', 'let ' + variables + '\nreturn ' + newCode)()
     /* eslint-enable */
+    return doEscape ? escape(fun) : fun
   } catch (e) { return code }
+}
+
+function escape (string) {
+  console.log(string)
+  let escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+  }
+  Object.keys(escapeMap).forEach(function (key) {
+    let testRegx = new RegExp(key, 'g')
+    string = string.replace(testRegx, function () {
+      return escapeMap[key]
+    })
+  })
+  console.log(string)
+  return string
 }
 
 HTMLEngine.evalString = function (string, data) {

@@ -158,6 +158,24 @@ describe('View', function () {
       })
     })
 
+    it('should escape template', function () {
+      this.view.model = new Model({
+        name: '<div>John</div>'
+      })
+      this.view.template = '<div><div class="ui-element"><$_ name /></div></div>'
+      this.view.render()
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">&lt;div&gt;John&lt;/div&gt;</div></div>')
+    })
+
+    it('should not escape template', function () {
+      this.view.model = new Model({
+        name: '<div>John</div>'
+      })
+      this.view.template = '<div><div class="ui-element"><$ name /></div></div>'
+      this.view.render()
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><div>John</div></div></div>')
+    })
+
     it('should pass model data to template', function () {
       this.view.model = new Model({
         name: 'John',
