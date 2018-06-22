@@ -32,6 +32,34 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
 
+    it('should emit render event', function () {
+      this.testFun = function (view) {
+      }
+      spyOn(this, 'testFun')
+      this.view = new View({
+        rootEl: this.rootEl
+      })
+      this.view.on('render', this.testFun)
+
+      this.view.render()
+
+      expect(this.testFun).toHaveBeenCalledWith(this.view)
+    })
+
+    it('should call onRender', function () {
+      this.testFun = function () {
+      }
+      spyOn(this, 'testFun')
+      this.view = new View({
+        rootEl: this.rootEl
+      })
+      this.view.onRender = this.testFun
+
+      this.view.render()
+
+      expect(this.testFun).toHaveBeenCalledWith(this.view)
+    })
+
     describe('child views', function () {
       beforeEach(function () {
         this.view = new View({
@@ -205,6 +233,12 @@ describe('View', function () {
       })
     })
 
+    it('should emit hide event on hide', function () {
+      spyOn(this.view, 'emit')
+      this.view.hide()
+      expect(this.view.emit).toHaveBeenCalledWith('hide', this.view)
+    })
+
     it('should clear root element on hide', function () {
       this.view.hide()
       expect(this.rootEl.innerHTML).toBe('')
@@ -227,6 +261,26 @@ describe('View', function () {
       this.childView.hide()
 
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div></div>')
+    })
+
+    it('should hide child views', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        ui: {
+          uiElement: '.ui-element'
+        },
+        template: '<div><div class="ui-element"></div></div>'
+      })
+      this.childView = new View({
+        template: '<div></div>'
+      })
+
+      this.view.render()
+      this.view.showChild('uiElement', this.childView)
+      this.view.hide()
+
+      expect(this.rootEl.innerHTML).toBe('')
+      expect(this.childView.rootEl.firstChild).toBe(null)
     })
   })
 })

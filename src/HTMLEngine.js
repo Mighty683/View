@@ -3,19 +3,19 @@ function findKeys (string, callback) {
 }
 
 function replaceKeys (data, _, code) {
-    let newCode = code
-    let variables = Object.keys(data).map(function (key) {
-      let dataString = typeof data[key] === 'function' ? data[key] : JSON.stringify(data[key])
-      return key + ' = ' + dataString
-    }).join(',\n')
-    if (/^.*if|^.*while|^.*for|^.*let|^.*var/g.test(code)) {
-      newCode = '(function () {' + code + '})()'
-    }
-    try {
-      /* eslint-disable */
-      return new Function('', 'let ' + variables + '\nreturn ' + newCode)()
-      /* eslint-enable */
-    } catch (e) { return code }
+  let newCode = code
+  let variables = Object.keys(data).map(function (key) {
+    let dataString = typeof data[key] === 'function' ? data[key] : JSON.stringify(data[key])
+    return key + ' = ' + dataString
+  }).join(',\n')
+  if (/^.*if|^.*while|^.*for|^.*let|^.*var/g.test(code)) {
+    newCode = '(function () {' + code + '})()'
+  }
+  try {
+    /* eslint-disable */
+    return new Function('', 'let ' + variables + '\nreturn ' + newCode)()
+    /* eslint-enable */
+  } catch (e) { return code }
 }
 
 HTMLEngine.evalString = function (string, data) {

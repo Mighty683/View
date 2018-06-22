@@ -9,7 +9,10 @@ View.prototype.render = function (withoutClear) {
   let position = withoutClear ? 'beforeend' : 'afterbegin'
   this.rootEl.insertAdjacentHTML(position, this._evalTemplate(this.template))
   this.mapUI()
-  this.emit('render')
+  if (typeof this.onRender === 'function') {
+    this.onRender(this)
+  }
+  this.emit('render', this)
 }
 
 View.prototype.clear = function () {
@@ -62,8 +65,17 @@ View.prototype.removeChild = function (child) {
     Object.keys(this._childViews).forEach(function (key) {
       if (this._childViews[key] === child) {
         child.hide()
-        delete this._childViews[child]
+        delete this._childViews[key]
       }
+    }.bind(this))
+  }
+}
+
+View.prototype.removeAllChild = function () {
+  if (this._childViews) {
+    Object.keys(this._childViews).forEach(function (key) {
+      this._childViews[key].hide()
+      delete this._childViews[key]
     }.bind(this))
   }
 }
@@ -73,8 +85,9 @@ View.prototype.getChilds = function () {
 }
 
 View.prototype.hide = function () {
+  this.removeAllChild()
   this.clear()
-  this.emit('destroy')
+  this.emit('hide', this)
 }
 
 function View (options) {
