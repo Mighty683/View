@@ -224,7 +224,7 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John getSurname() Plumber</div></div>')
     })
 
-    it('should pass key if value is missing', function () {
+    it('should call function', function () {
       this.view.templateData = {
         name: 'John',
         showName: true
@@ -234,7 +234,7 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John</div></div>')
     })
 
-    it('should pass key if value is missing', function () {
+    it('should call function', function () {
       this.view.templateData = {
         name: 'John'
       }
