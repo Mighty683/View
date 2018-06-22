@@ -43,17 +43,23 @@ describe('View', function () {
           template: '<div><div class="ui-element"></div><a></a></div>'
         })
         this.childView = new View({
-          template: '<div></div>'
+          template: '<a></a>'
         })
         this.childView2 = new View({
-          template: '<div></div>'
+          template: '<b></b>'
         })
         this.view.render()
-        this.view.showChild('uiElement', this.childView)
       })
 
       it('should render child', function () {
-        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><div></div></div><a></a></div>')
+        this.view.showChild('uiElement', this.childView)
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a></div><a></a></div>')
+      })
+
+      it('should render childsViews', function () {
+        this.view.showChild('uiElement', this.childView)
+        this.view.showChild('link', this.childView2)
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a></div><a><b></b></a></div>')
       })
 
       it('should remove child', function () {
@@ -65,7 +71,14 @@ describe('View', function () {
         this.view.showChild('uiElement', this.childView)
         this.view.showChild('link', this.childView2)
         this.view.removeChild(this.childView)
-        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a><div></div></a></div>')
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a><b></b></a></div>')
+      })
+
+      it('should hide only proper child', function () {
+        this.view.showChild('uiElement', this.childView)
+        this.view.showChild('link', this.childView2)
+        this.childView.hide()
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a><b></b></a></div>')
       })
 
       it('shouldn\'t render child on re-render child', function () {
@@ -95,12 +108,12 @@ describe('View', function () {
       })
 
       it('should render multiple childViews', function () {
-        this.view.showViewsCollection('uiElement', this.childArray)
+        this.view.showCollection('uiElement', this.childArray)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a><b></b></div></div>')
       })
 
       it('should remove all childViews', function () {
-        this.view.showViewsCollection('uiElement', this.childArray)
+        this.view.showCollection('uiElement', this.childArray)
         this.view.removeChild('uiElement')
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div></div>')
       })

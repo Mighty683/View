@@ -3,16 +3,11 @@ Simple event driven View
 
 ## Usage
 
+```npm install event-driven-view```
 
 ## Features
 
-You can use View as 'Over View' to render others views or to render data inside DOM.
-
-### Model
-
-Data is kept inside Observable Model more info: https://www.npmjs.com/package/observable-model
-
-All data from model is visible inside template
+View is basic 'brick' of framework. Use it as View or as Controller to render other views.
 
 ### Render
 
@@ -64,12 +59,15 @@ view.removeChild(childView)
 
 ### Template 
 
-You can use ```<$variable/>``` syntax to pass data into template.
+You can use ```<$ variable />``` syntax to pass data into template.
 Data for template comes from View.templateData or from view.model.
+
+Data is kept inside Observable Model more info: https://www.npmjs.com/package/observable-model
+
+All data from model is visible inside template.
 
 ```js
 let view.model = new Model({
-    name: 'John',
     getSurname: function () {
       let variable = {
         el: 'Brand'
@@ -79,11 +77,16 @@ let view.model = new Model({
     proffesion: {
       name: 'Plumber'
     }
-  })
+  }),
+  view.templateData = {
+    name: 'John',
+    showName: true
+  }
   view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
   view.render()
   // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
 ```
+You can pass functions into template ```<$ if(showName) { return name } else { return '' } />```
 
 ## More
 
