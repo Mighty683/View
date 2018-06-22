@@ -96,6 +96,7 @@ function View (options) {
   this.rootEl = options.rootEl
   this.ui = options.ui
   this.template = options.template
+  this.templateData = options.templateData
   this.model = options.model || new Model()
 
   this._childViews = {}
