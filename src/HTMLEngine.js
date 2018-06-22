@@ -35,7 +35,6 @@ function escape (string) {
       return escapeMap[key]
     })
   })
-  console.log(string)
   return string
 }
 
