@@ -14,7 +14,7 @@ View is basic 'brick' of framework. Use it as View or as Controller to render ot
 To render HTML template inside element use like this:
 ```js
 let view = new View({
-  el: docEl,
+  rootEl: docEl,
   template: '<div><a>Link</a></div>',
   ui: {
     link: 'a'
@@ -38,7 +38,7 @@ let view = new View({
   }),
   childView = new View({
     template: '<div></div>'
-  }
+  })
   view.render()
   view.showChild('uiElement', childView)
   // HTML: '<div><div class="ui-element"><div></div></div></div>'
@@ -82,7 +82,7 @@ let view.model = new Model({
     name: 'John',
     showName: true
   }
-  view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
+  view.template = '<div><div class="ui-element"><$ name /> <$ getSurname() /> <$ proffesion.name /></div></div>'
   view.render()
   // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
 ```
