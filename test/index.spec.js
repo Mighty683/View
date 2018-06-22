@@ -61,7 +61,7 @@ describe('View', function () {
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a></a></div>')
       })
 
-      it('should remove child', function () {
+      it('should remove proper child', function () {
         this.view.showChild('uiElement', this.childView)
         this.view.showChild('link', this.childView2)
         this.view.removeChild(this.childView)
@@ -71,6 +71,38 @@ describe('View', function () {
       it('shouldn\'t render child on re-render child', function () {
         this.view.render()
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a></a></div>')
+      })
+    })
+
+    describe('views collections', function () {
+      beforeEach(function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          ui: {
+            uiElement: '.ui-element',
+            link: 'a'
+          },
+          template: '<div><div class="ui-element"></div></div>'
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.childView2 = new View({
+          template: '<b></b>'
+        })
+        this.childArray = [this.childView, this.childView2]
+        this.view.render()
+      })
+
+      it('should render multiple childViews', function () {
+        this.view.showViewsCollection('uiElement', this.childArray)
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a><b></b></div></div>')
+      })
+
+      it('should remove all childViews', function () {
+        this.view.showViewsCollection('uiElement', this.childArray)
+        this.view.removeChild('uiElement')
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div></div>')
       })
     })
   })
@@ -98,7 +130,7 @@ describe('View', function () {
           name: 'Plumber'
         }
       })
-      this.view.template = '<div><div class="ui-element"><$name> <$getSurname()> <$proffesion.name></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
@@ -116,7 +148,7 @@ describe('View', function () {
           name: 'Plumber'
         }
       }
-      this.view.template = '<div><div class="ui-element"><$name> <$getSurname()> <$proffesion.name></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
@@ -128,9 +160,28 @@ describe('View', function () {
           name: 'Plumber'
         }
       }
-      this.view.template = '<div><div class="ui-element"><$name> <$getSurname()> <$proffesion.name></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John getSurname() Plumber</div></div>')
+    })
+
+    it('should pass key if value is missing', function () {
+      this.view.templateData = {
+        name: 'John',
+        showName: true
+      }
+      this.view.template = '<div><div class="ui-element"><$if (showName) { return name } else { return "" }/></div></div>'
+      this.view.render()
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John</div></div>')
+    })
+
+    it('should pass key if value is missing', function () {
+      this.view.templateData = {
+        name: 'John'
+      }
+      this.view.template = '<div><div class="ui-element"><$let string = name; for (let i = 0 ; i < 2 ; i ++) { string+=name } return string /></div></div>'
+      this.view.render()
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">JohnJohnJohn</div></div>')
     })
   })
 

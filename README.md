@@ -48,6 +48,9 @@ let view = new View({
   view.showChild('uiElement', childView)
   // HTML: '<div><div class="ui-element"><div></div></div></div>'
 ```
+View should show childView inside '.ui-element'. Remember you can show child views only in rendered views.
+
+
 You can remove child view by selecting ui element or passing child View object
 ```js
 view.removeChild('uiElement')
@@ -57,12 +60,11 @@ view.removeChild('uiElement')
 view.removeChild(childView)
 ```
 
-View should show childView inside '.ui-element'. Remember you can show child views only in rendered views.
 
 
 ### Template 
 
-You can use ```<$variable>``` syntax to pass data into template.
+You can use ```<$variable/>``` syntax to pass data into template.
 Data for template comes from View.templateData or from view.model.
 
 ```js
@@ -78,7 +80,7 @@ let view.model = new Model({
       name: 'Plumber'
     }
   })
-  view.template = '<div><div class="ui-element"><$name> <$getSurname()> <$proffesion.name></div></div>'
+  view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
   view.render()
   // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
 ```
