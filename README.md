@@ -31,7 +31,7 @@ You can pass another view to show inside on choosen element
 ```js
 let view = new View({
     rootEl: this.rootEl,
-      ui: {
+    ui: {
       uiElement: '.ui-element'
     },
     template: '<div><div class="ui-element"></div></div>'
@@ -54,7 +54,6 @@ view.removeChild('uiElement')
 ```js
 view.removeChild(childView)
 ```
-
 
 
 ### Template 
@@ -85,6 +84,18 @@ let view.model = new Model({
   view.template = '<div><div class="ui-element"><$ name /> <$ getSurname() /> <$ proffesion.name /></div></div>'
   view.render()
   // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
+```
+
+### UI Methods
+
+UI component from getUI method extends vanilla.js Element by new methods.
+Available UI methods:
+```js
+let ui = view.getUI('selector')
+
+ui.removeClass('className')
+ui.addClass('className')
+ui.toogleClass('className')
 ```
 
 ## More
