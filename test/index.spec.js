@@ -186,10 +186,10 @@ describe('View', function () {
           return variable['el']
         },
         proffesion: {
-          name: 'Plumber'
+          proffName: 'Plumber'
         }
       })
-      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
@@ -204,10 +204,10 @@ describe('View', function () {
           return variable['el']
         },
         proffesion: {
-          name: 'Plumber'
+          proffName: 'Plumber'
         }
       }
-      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
@@ -216,31 +216,12 @@ describe('View', function () {
       this.view.templateData = {
         name: 'John',
         proffesion: {
-          name: 'Plumber'
+          proffName: 'Plumber'
         }
       }
-      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.name/></div></div>'
+      this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
       this.view.render()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John getSurname() Plumber</div></div>')
-    })
-
-    it('should call function', function () {
-      this.view.templateData = {
-        name: 'John',
-        showName: true
-      }
-      this.view.template = '<div><div class="ui-element"><$if (showName) { return name } else { return "" }/></div></div>'
-      this.view.render()
-      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John</div></div>')
-    })
-
-    it('should call function', function () {
-      this.view.templateData = {
-        name: 'John'
-      }
-      this.view.template = '<div><div class="ui-element"><$let string = name; for (let i = 0 ; i < 2 ; i ++) { string+=name } return string /></div></div>'
-      this.view.render()
-      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">JohnJohnJohn</div></div>')
     })
   })
 

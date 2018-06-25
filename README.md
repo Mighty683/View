@@ -86,7 +86,6 @@ let view.model = new Model({
   view.render()
   // HTML: '<div><div class="ui-element">John Brand Plumber</div></div>'
 ```
-You can pass functions into template ```<$ if(showName) { return name } else { return '' } />```
 
 ## More
 

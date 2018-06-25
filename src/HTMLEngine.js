@@ -4,20 +4,16 @@ function findKeys (string, callback) {
 
 function replaceKeys (data, _, code) {
   let doEscape = _.substring(0, 3) === '<$_'
-  code = doEscape ? code.slice(1) : code
-  let variables = Object.keys(data).map(function (key) {
-    let dataString = typeof data[key] === 'function' ? data[key] : JSON.stringify(data[key])
-    return key + ' = ' + dataString
-  }).join(',\n')
-  if (/^.*if|^.*while|^.*for|^.*let|^.*var/g.test(code)) {
-    code = '(function () {' + code + '})()'
-  }
+  let parsedCode = doEscape ? code.slice(1) : code
+  let scoped = parsedCode.replace(/(["'.\w]+)/g, function (match) {
+    return /["']/.test(match[0]) ? match : '_data.' + match
+  })
   try {
     /* eslint-disable */
-    let fun = new Function('', 'let ' + variables + '\nreturn ' + code)()
+    let result = new Function('_data', 'return '+ scoped)(data)
     /* eslint-enable */
-    return doEscape ? escape(fun) : fun
-  } catch (e) { return code }
+    return doEscape ? escape(result) : result
+  } catch (e) { return parsedCode }
 }
 
 function escape (string) {
