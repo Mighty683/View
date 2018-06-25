@@ -4,6 +4,7 @@ const Model = require('observable-model')
 describe('View', function () {
   beforeEach(function () {
     this.rootEl = document.createElement('body')
+    this.rootEl.innerHTML = '<a></a>'
   })
 
   it('should be defined', function () {
@@ -120,8 +121,7 @@ describe('View', function () {
         this.view = new View({
           rootEl: this.rootEl,
           ui: {
-            uiElement: '.ui-element',
-            link: 'a'
+            uiElement: '.ui-element'
           },
           template: '<div><div class="ui-element"></div></div>'
         })
@@ -280,6 +280,41 @@ describe('View', function () {
 
       expect(this.rootEl.innerHTML).toBe('')
       expect(this.childView.rootEl.firstChild).toBe(null)
+    })
+  })
+
+  describe('UI methods', function () {
+    beforeEach(function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        ui: {
+          uiElement: '.ui-element',
+          link: 'a'
+        },
+        template: '<div><div class="ui-element class1"></div><a></a></div>'
+      })
+      this.view.render()
+    })
+
+    it('should remove class from UI ', function () {
+      this.view.getUI('uiElement').removeClass('class1')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a></a></div>')
+    })
+
+    it('should add class to UI ', function () {
+      this.view.getUI('uiElement').addClass('class2')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element class1 class2"></div><a></a></div>')
+    })
+
+    it('shouldn\'t add class to UI ', function () {
+      this.view.getUI('uiElement').addClass('class1')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element class1"></div><a></a></div>')
+    })
+
+    it('should toggle class on UI ', function () {
+      this.view.getUI('uiElement').removeClass('class1')
+      this.view.getUI('link').toogleClass('class1')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a class="class1"></a></div>')
     })
   })
 })

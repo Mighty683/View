@@ -1,6 +1,7 @@
 const EventObject = require('event-driven-object')
 const Model = require('event-driven-object')
 const HTMLEngine = require('./HTMLEngine')
+const UiFunctions = require('./uiFunctions')
 
 View.prototype = Object.create(EventObject.prototype)
 
@@ -29,7 +30,12 @@ View.prototype._evalTemplate = function () {
 View.prototype.mapUI = function () {
   if (this.ui) {
     Object.keys(this.ui).forEach(function (key) {
-      this._ui[key] = this.rootEl.querySelector(this.ui[key])
+      let selector = this.rootEl.querySelector(this.ui[key])
+      let uiElement = selector && Object.assign(this.rootEl.querySelector(this.ui[key]), UiFunctions)
+      if (!uiElement) {
+        throw Error('No matching UI element found"' + key)
+      }
+      this._ui[key] = uiElement
     }.bind(this))
   }
 }
@@ -92,13 +98,13 @@ View.prototype.hide = function () {
 
 function View (options) {
   EventObject.call(this)
-
-  this.rootEl = options.rootEl
-  this.ui = options.ui
-  this.template = options.template
-  this.templateData = options.templateData
-  this.model = options.model || new Model()
-
+  if (options) {
+    this.rootEl = options.rootEl
+    this.ui = options.ui
+    this.template = options.template
+    this.templateData = options.templateData
+    this.model = options.model || new Model()
+  }
   this._childViews = {}
   this._ui = {}
 }
