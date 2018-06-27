@@ -1,6 +1,6 @@
 {
   "name": "event-driven-view",
-  "version": "0.2.6",
+  "version": "0.2.8",
   "description": "Simple event driven view",
   "main": "index.js",
   "scripts": {
@@ -25,13 +25,13 @@
   },
   "homepage": "https://github.com/Mighty683/View#readme",
   "dependencies": {
-    "event-driven-object": "^1.0.4",
-    "observable-model": "^1.0.4"
+    "event-driven-object": "*",
+    "observable-model": "*"
   },
   "devDependencies": {
     "browserify": "^16.2.2",
     "jasmine-core": "^3.1.0",
-    "karma": "^2.0.3",
+    "karma": "^2.0.4",
     "karma-browserify": "^5.3.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.2",
