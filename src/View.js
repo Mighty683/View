@@ -7,13 +7,17 @@ View.prototype = Object.create(EventObject.prototype)
 
 View.prototype.render = function (withoutClear) {
   withoutClear || this.clear()
-  let position = withoutClear ? 'beforeend' : 'afterbegin'
-  this.rootEl.insertAdjacentHTML(position, this._evalTemplate(this.template))
+  this.rootEl.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
   this.mapUI()
   if (typeof this.onRender === 'function') {
     this.onRender(this)
   }
   this.emit('render', this)
+}
+
+View.prototype.show = function (view) {
+  view.rootEl = this.rootEl
+  view.render()
 }
 
 View.prototype.clear = function () {
