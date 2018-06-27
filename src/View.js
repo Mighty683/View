@@ -32,8 +32,9 @@ View.prototype._render = function (element, withoutClear) {
   return element
 }
 
-View.prototype.show = function (view) {
+View.prototype.show = function (view, element) {
   view.rootEl = this.rootEl
+  view.element = view.element || element
   view.render()
 }
 

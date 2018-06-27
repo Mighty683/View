@@ -84,6 +84,19 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<a></a>')
     })
 
+    it('should show view on rootEl', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>'
+      })
+      this.childView = new View({
+        template: '<a></a>'
+      })
+      this.view.show(this.childView, 'p')
+
+      expect(this.rootEl.innerHTML).toBe('<p><a></a></p>')
+    })
+
     it('should template after showing view view on rootEl', function () {
       this.view = new View({
         rootEl: this.rootEl,
