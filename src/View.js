@@ -15,6 +15,9 @@ View.prototype.render = function (options) {
   } else {
     this._render(this.rootEl, withoutClear)
   }
+  if (typeof this.onRender === 'function') {
+    this.onRender(this)
+  }
 }
 
 View.prototype._render = function (element, withoutClear) {
@@ -25,9 +28,6 @@ View.prototype._render = function (element, withoutClear) {
     UiFunctions.addClass.call(element, this.classList)
   }
   this.mapUI()
-  if (typeof this.onRender === 'function') {
-    this.onRender(this)
-  }
   this.emit('render', this)
   return element
 }
@@ -73,7 +73,7 @@ View.prototype.showChild = function (uiName, childView) {
 
 View.prototype.showCollection = function (uiName, childViews, element) {
   childViews.forEach(function (childView) {
-    childView.element = element
+    childView.element = childView.element || element
     childView.rootEl = this.getUI(uiName)
     childView.render({
       withoutClear: true
