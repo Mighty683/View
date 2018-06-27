@@ -33,6 +33,19 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
 
+    it('should add classes to el', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>',
+        classList: ['class', 'class1']
+      })
+
+      this.view.render()
+
+      expect(this.rootEl.classList.contains('class')).toBeTruthy()
+      expect(this.rootEl.classList.contains('class1')).toBeTruthy()
+    })
+
     it('should show view on rootEl', function () {
       this.view = new View({
         rootEl: this.rootEl,

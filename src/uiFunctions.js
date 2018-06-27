@@ -13,8 +13,16 @@ function toogleClass (className) {
 }
 
 function addClass (className) {
-  if (!this.classList.contains(className)) {
-    this.classList.add(className)
+  if (className instanceof Array) {
+    className.forEach(function (_class) {
+      if (this.classList && !this.classList.contains(_class)) {
+        this.classList.add(_class)
+      }
+    }.bind(this))
+  } else {
+    if (this.classList && !this.classList.contains(className)) {
+      this.classList.add(className)
+    }
   }
 }
 

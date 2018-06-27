@@ -8,6 +8,9 @@ View.prototype = Object.create(EventObject.prototype)
 View.prototype.render = function (withoutClear) {
   withoutClear || this.clear()
   this.rootEl.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
+  if (this.classList) {
+    UiFunctions.addClass.call(this.rootEl, this.classList)
+  }
   this.mapUI()
   if (typeof this.onRender === 'function') {
     this.onRender(this)
@@ -103,6 +106,7 @@ View.prototype.hide = function () {
 function View (options) {
   EventObject.call(this)
   if (options) {
+    this.classList = options.classList || ''
     this.rootEl = options.rootEl
     this.ui = options.ui
     this.template = options.template
