@@ -45,6 +45,19 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
     })
 
+    it('should wrap template once', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>',
+        element: 'p'
+      })
+
+      this.view.render()
+      this.view.render()
+
+      expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
+    })
+
     it('should add classes to el', function () {
       this.view = new View({
         rootEl: this.rootEl,

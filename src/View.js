@@ -7,14 +7,14 @@ View.prototype = Object.create(EventObject.prototype)
 
 View.prototype.render = function (options) {
   let withoutClear = options && options.withoutClear
-
-  if (this.element) {
+  if (this.element && !this._rendered) {
     let element = this._render(document.createElement(this.element), withoutClear)
     this.rootEl.insertAdjacentElement('beforeend', element)
     this.rootEl = element
   } else {
     this._render(this.rootEl, withoutClear)
   }
+  this._rendered = true
   if (typeof this.onRender === 'function') {
     this.onRender(this)
   }
