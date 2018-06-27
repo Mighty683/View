@@ -15,6 +15,7 @@ View.prototype.render = function (options) {
     this._render(this.rootEl, withoutClear)
   }
   this._rendered = true
+  this.emit('render', this)
   if (typeof this.onRender === 'function') {
     this.onRender(this)
   }
@@ -28,7 +29,6 @@ View.prototype._render = function (element, withoutClear) {
     UiFunctions.addClass.call(element, this.classList)
   }
   this.mapUI()
-  this.emit('render', this)
   return element
 }
 
