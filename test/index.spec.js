@@ -33,6 +33,18 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
 
+    it('should wrap template', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>',
+        element: 'p'
+      })
+
+      this.view.render()
+
+      expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
+    })
+
     it('should add classes to el', function () {
       this.view = new View({
         rootEl: this.rootEl,
@@ -44,6 +56,19 @@ describe('View', function () {
 
       expect(this.rootEl.classList.contains('class')).toBeTruthy()
       expect(this.rootEl.classList.contains('class1')).toBeTruthy()
+    })
+
+    it('should wrap template and add class', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>',
+        element: 'p',
+        classList: ['class']
+      })
+
+      this.view.render()
+
+      expect(this.rootEl.innerHTML).toBe('<p class="class"><div></div></p>')
     })
 
     it('should show view on rootEl', function () {
@@ -178,6 +203,11 @@ describe('View', function () {
       it('should render multiple childViews', function () {
         this.view.showCollection('uiElement', this.childArray)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a><b></b></div></div>')
+      })
+
+      it('should render multiple wraped childViews', function () {
+        this.view.showCollection('uiElement', this.childArray, 'p')
+        expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><p><a></a></p><p><b></b></p></div></div>')
       })
 
       it('should remove all childViews', function () {

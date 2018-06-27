@@ -5,17 +5,31 @@ const UiFunctions = require('./uiFunctions')
 
 View.prototype = Object.create(EventObject.prototype)
 
-View.prototype.render = function (withoutClear) {
+View.prototype.render = function (options) {
+  let withoutClear = options && options.withoutClear
+
+  if (this.element) {
+    let element = this._render(document.createElement(this.element), withoutClear)
+    this.rootEl.insertAdjacentElement('beforeend', element)
+    this.rootEl = element
+  } else {
+    this._render(this.rootEl, withoutClear)
+  }
+}
+
+View.prototype._render = function (element, withoutClear) {
+  element = element || this.rootEl
   withoutClear || this.clear()
-  this.rootEl.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
+  element.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
   if (this.classList) {
-    UiFunctions.addClass.call(this.rootEl, this.classList)
+    UiFunctions.addClass.call(element, this.classList)
   }
   this.mapUI()
   if (typeof this.onRender === 'function') {
     this.onRender(this)
   }
   this.emit('render', this)
+  return element
 }
 
 View.prototype.show = function (view) {
@@ -57,10 +71,13 @@ View.prototype.showChild = function (uiName, childView) {
   childView.render()
 }
 
-View.prototype.showCollection = function (uiName, childViews) {
+View.prototype.showCollection = function (uiName, childViews, element) {
   childViews.forEach(function (childView) {
+    childView.element = element
     childView.rootEl = this.getUI(uiName)
-    childView.render(true)
+    childView.render({
+      withoutClear: true
+    })
   }.bind(this))
   this._childViews[uiName] = childViews
 }
@@ -106,6 +123,7 @@ View.prototype.hide = function () {
 function View (options) {
   EventObject.call(this)
   if (options) {
+    this.element = options.element || ''
     this.classList = options.classList || ''
     this.rootEl = options.rootEl
     this.ui = options.ui
