@@ -97,6 +97,48 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<a></a>')
     })
 
+    it('should hide elements', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>'
+      })
+      this.childView = new View({
+        template: '<a></a>'
+      })
+      this.view.show(this.childView)
+      this.view.hide()
+
+      expect(this.rootEl.innerHTML).toBe('')
+    })
+
+    it('should hide child view from root El', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>'
+      })
+      this.childView = new View({
+        template: '<a></a>'
+      })
+      this.view.show(this.childView)
+      this.view.removeChild(this.childView)
+
+      expect(this.rootEl.innerHTML).toBe('')
+    })
+
+    it('should hide child view from root El', function () {
+      this.view = new View({
+        rootEl: this.rootEl,
+        template: '<div></div>'
+      })
+      this.childView = new View({
+        template: '<a></a>'
+      })
+      this.view.show(this.childView)
+      this.view.removeChild('rootEl')
+
+      expect(this.rootEl.innerHTML).toBe('')
+    })
+
     it('should show view on rootEl', function () {
       this.view = new View({
         rootEl: this.rootEl,

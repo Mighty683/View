@@ -35,6 +35,7 @@ View options:
 - template: HTML template
 - model: instance of observable-model
 - templateData: data passed for template parsing
+- ui: elements for controlling view and rendering childviews every view after render has 'rootEl' ui element
 
 ### Show Child
 
@@ -170,6 +171,8 @@ ui.removeClass('className')
 ui.addClass('className')
 ui.toogleClass('className')
 ```
+
+Every rendered view has 'rootEl' UI!
 
 ## More
 

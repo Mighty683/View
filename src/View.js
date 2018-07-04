@@ -37,6 +37,7 @@ View.prototype.show = function () {
     let view = arguments[0]
     view.rootEl = this.rootEl
     view.element = view.element || arguments[1]
+    this._childViews['rootEl'] = view
     view._show()
   } else if (typeof arguments[0] === 'string') {
     if (arguments[1] instanceof View) {
@@ -69,18 +70,18 @@ View.prototype._evalTemplate = function () {
 View.prototype.mapUI = function () {
   if (this.ui) {
     Object.keys(this.ui).forEach(function (key) {
-      let selector = this.rootEl.querySelector(this.ui[key])
-      let uiElement = selector && Object.assign(this.rootEl.querySelector(this.ui[key]), UiFunctions)
+      let uiElement = this.rootEl.querySelector(this.ui[key])
       if (!uiElement) {
         throw Error('No matching UI element found"' + key)
       }
       this._ui[key] = uiElement
     }.bind(this))
   }
+  this._ui['rootEl'] = this.rootEl
 }
 
 View.prototype.getUI = function (uiName) {
-  return this._ui[uiName]
+  return Object.assign(this._ui[uiName], UiFunctions)
 }
 
 View.prototype._showCollection = function (uiName, childViews, element) {
@@ -116,7 +117,9 @@ View.prototype.removeChild = function (child) {
 View.prototype.removeAllChild = function () {
   if (this._childViews) {
     Object.keys(this._childViews).forEach(function (key) {
-      this._childViews[key].hide()
+      if (this._childViews[key] instanceof View) {
+        this._childViews[key].hide()
+      }
       delete this._childViews[key]
     }.bind(this))
   }
