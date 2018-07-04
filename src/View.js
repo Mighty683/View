@@ -5,7 +5,7 @@ const UiFunctions = require('./uiFunctions')
 
 View.prototype = Object.create(EventObject.prototype)
 
-View.prototype.render = function (options) {
+View.prototype._show = function (options) {
   let withoutClear = options && options.withoutClear
   if (this.element && !this._rendered) {
     let element = this._render(document.createElement(this.element), withoutClear)
@@ -32,10 +32,27 @@ View.prototype._render = function (element, withoutClear) {
   return element
 }
 
-View.prototype.show = function (view, element) {
-  view.rootEl = this.rootEl
-  view.element = view.element || element
-  view.render()
+View.prototype.show = function () {
+  if (arguments[0] instanceof View) {
+    let view = arguments[0]
+    view.rootEl = this.rootEl
+    view.element = view.element || arguments[1]
+    view._show()
+  } else if (typeof arguments[0] === 'string') {
+    if (arguments[1] instanceof View) {
+      this._showChild.apply(this, arguments)
+    } else if (arguments[1] instanceof Array) {
+      this._showCollection.apply(this, arguments)
+    }
+  } else {
+    this._show()
+  }
+}
+
+View.prototype._showChild = function (uiName, childView) {
+  childView.rootEl = this.getUI(uiName)
+  this._childViews[uiName] = childView
+  childView._show()
 }
 
 View.prototype.clear = function () {
@@ -66,17 +83,11 @@ View.prototype.getUI = function (uiName) {
   return this._ui[uiName]
 }
 
-View.prototype.showChild = function (uiName, childView) {
-  childView.rootEl = this.getUI(uiName)
-  this._childViews[uiName] = childView
-  childView.render()
-}
-
-View.prototype.showCollection = function (uiName, childViews, element) {
+View.prototype._showCollection = function (uiName, childViews, element) {
   childViews.forEach(function (childView) {
     childView.element = childView.element || element
     childView.rootEl = this.getUI(uiName)
-    childView.render({
+    childView._show({
       withoutClear: true
     })
   }.bind(this))

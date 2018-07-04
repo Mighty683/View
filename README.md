@@ -9,20 +9,32 @@ Simple event driven View
 
 View is basic 'brick' of framework. Use it as View or as Controller to render other views.
 
-### Render
-
-To render HTML template inside element use like this:
+### Show
+To render HTML template inside element use show:
 ```js
 let view = new View({
   rootEl: docEl,
+  element: 'div',
   template: '<div><a>Link</a></div>',
+  templateData: {
+    name: 'John'
+  },
   ui: {
     link: 'a'
-  }
+  },
+  classList: ['wide', 'transparent']
 })
 
-view.render()
+view.show()
 ```
+
+View options:
+- rootEl: element to whick view will be attached
+- element: view can be wrapped inside element, new element will be rootEl after render
+- classList: list of classes which will be added to root element
+- template: HTML template
+- model: instance of observable-model
+- templateData: data passed for template parsing
 
 ### Show Child
 
@@ -40,13 +52,74 @@ let view = new View({
     template: '<div></div>'
   })
   view.render()
-  view.showChild('uiElement', childView)
+  view.show('uiElement', childView)
   // HTML: '<div><div class="ui-element"><div></div></div></div>'
 ```
-View should show childView inside '.ui-element'. Remember you can show child views only in rendered views.
+
+Remember ui elements are accesible after render.
+
+```js
+let view = new View({
+    rootEl: this.rootEl,
+    ui: {
+      uiElement: '.ui-element'
+    },
+    template: '<div><div class="ui-element"></div></div>'
+  }),
+  childView = new View({
+    template: '<a></a>'
+  })
+  view.render()
+  view.show(childView, 'p')
+  // HTML: '<div><div class="ui-element"><p><a></a></p></div></div>'
+```
+You can show another view inside of view instead of using template. You can wrap child view inside of element(optional)
 
 
-You can remove child view by selecting ui element or passing child View object
+
+View can render collection of elements:
+```js
+let view = new View({
+    rootEl: this.rootEl,
+    ui: {
+      uiElement: '.ui-element'
+    },
+    template: '<div><div class="ui-element"></div></div>'
+  }),
+  childViewArray = [new View({
+    template: '<a></a>'
+  }), new View({
+    template: '<p></p>'
+  })]
+  view.render()
+  view.show('uiElement', childViewArray)
+  // HTML: '<div><div class="ui-element"><a></a><p></p></div></div>'
+```
+
+To prevent rendering multiple views with the same rootEl use element argument.
+Child Views will be wrapped into new elements.
+If child view has own element, show will use childView.element instead of element argument.
+```js
+let view = new View({
+    rootEl: this.rootEl,
+    ui: {
+      uiElement: '.ui-element'
+    },
+    template: '<div><div class="ui-element"></div></div>'
+  }),
+  childViewArray = [new View({
+    template: ''
+  }), new View({
+    template: ''
+  })]
+  view.render()
+  view.show('uiElement', childViewArray, 'p')
+  // HTML: '<div><div class="ui-element"><p></p><p></p></div></div>'
+```
+
+
+You can remove child view by selecting ui element or passing child View object.
+If ui element has collection of views all will be removed.
 ```js
 view.removeChild('uiElement')
 ```
@@ -88,7 +161,7 @@ let view.model = new Model({
 
 ### UI Methods
 
-UI component from getUI method extends vanilla.js Element by new methods.
+UI component from getUI method extends document Element by new methods.
 Available UI methods:
 ```js
 let ui = view.getUI('selector')

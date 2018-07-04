@@ -21,14 +21,14 @@ describe('View', function () {
     })
   })
 
-  describe('rendering', function () {
+  describe('showing', function () {
     it('should show template', function () {
       this.view = new View({
         rootEl: this.rootEl,
         template: '<div></div>'
       })
 
-      this.view.render()
+      this.view.show()
 
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
@@ -40,7 +40,7 @@ describe('View', function () {
         element: 'p'
       })
 
-      this.view.render()
+      this.view.show()
 
       expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
     })
@@ -52,8 +52,8 @@ describe('View', function () {
         element: 'p'
       })
 
-      this.view.render()
-      this.view.render()
+      this.view.show()
+      this.view.show()
 
       expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
     })
@@ -65,7 +65,7 @@ describe('View', function () {
         classList: ['class', 'class1']
       })
 
-      this.view.render()
+      this.view.show()
 
       expect(this.rootEl.classList.contains('class')).toBeTruthy()
       expect(this.rootEl.classList.contains('class1')).toBeTruthy()
@@ -79,7 +79,7 @@ describe('View', function () {
         classList: ['class']
       })
 
-      this.view.render()
+      this.view.show()
 
       expect(this.rootEl.innerHTML).toBe('<p class="class"><div></div></p>')
     })
@@ -119,7 +119,7 @@ describe('View', function () {
         template: '<a></a>'
       })
       this.view.show(this.childView)
-      this.view.render()
+      this.view.show()
 
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
@@ -133,7 +133,7 @@ describe('View', function () {
       })
       this.view.on('render', this.testFun)
 
-      this.view.render()
+      this.view.show()
 
       expect(this.testFun).toHaveBeenCalledWith(this.view)
     })
@@ -147,7 +147,7 @@ describe('View', function () {
       })
       this.view.onRender = this.testFun
 
-      this.view.render()
+      this.view.show()
 
       expect(this.testFun).toHaveBeenCalledWith(this.view)
     })
@@ -168,17 +168,17 @@ describe('View', function () {
         this.childView2 = new View({
           template: '<b></b>'
         })
-        this.view.render()
+        this.view.show()
       })
 
-      it('should render child', function () {
-        this.view.showChild('uiElement', this.childView)
+      it('should show child', function () {
+        this.view.show('uiElement', this.childView)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a></div><a></a></div>')
       })
 
-      it('should render childsViews', function () {
-        this.view.showChild('uiElement', this.childView)
-        this.view.showChild('link', this.childView2)
+      it('should show childsViews', function () {
+        this.view.show('uiElement', this.childView)
+        this.view.show('link', this.childView2)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a></div><a><b></b></a></div>')
       })
 
@@ -188,21 +188,21 @@ describe('View', function () {
       })
 
       it('should remove proper child', function () {
-        this.view.showChild('uiElement', this.childView)
-        this.view.showChild('link', this.childView2)
+        this.view.show('uiElement', this.childView)
+        this.view.show('link', this.childView2)
         this.view.removeChild(this.childView)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a><b></b></a></div>')
       })
 
       it('should hide only proper child', function () {
-        this.view.showChild('uiElement', this.childView)
-        this.view.showChild('link', this.childView2)
+        this.view.show('uiElement', this.childView)
+        this.view.show('link', this.childView2)
         this.childView.hide()
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a><b></b></a></div>')
       })
 
-      it('shouldn\'t render child on re-render child', function () {
-        this.view.render()
+      it('shouldn\'t show child on re-show child', function () {
+        this.view.show()
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a></a></div>')
       })
     })
@@ -223,21 +223,21 @@ describe('View', function () {
           template: '<b></b>'
         })
         this.childArray = [this.childView, this.childView2]
-        this.view.render()
+        this.view.show()
       })
 
-      it('should render multiple childViews', function () {
-        this.view.showCollection('uiElement', this.childArray)
+      it('should show multiple childViews', function () {
+        this.view.show('uiElement', this.childArray)
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><a></a><b></b></div></div>')
       })
 
-      it('should render multiple wraped childViews', function () {
-        this.view.showCollection('uiElement', this.childArray, 'p')
+      it('should show multiple wraped childViews', function () {
+        this.view.show('uiElement', this.childArray, 'p')
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><p><a></a></p><p><b></b></p></div></div>')
       })
 
       it('should remove all childViews', function () {
-        this.view.showCollection('uiElement', this.childArray)
+        this.view.show('uiElement', this.childArray)
         this.view.removeChild('uiElement')
         expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div></div>')
       })
@@ -259,7 +259,7 @@ describe('View', function () {
         name: '<div>John</div>'
       })
       this.view.template = '<div><div class="ui-element"><$_ name /></div></div>'
-      this.view.render()
+      this.view.show()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">&lt;div&gt;John&lt;/div&gt;</div></div>')
     })
 
@@ -268,7 +268,7 @@ describe('View', function () {
         name: '<div>John</div>'
       })
       this.view.template = '<div><div class="ui-element"><$ name /></div></div>'
-      this.view.render()
+      this.view.show()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"><div>John</div></div></div>')
     })
 
@@ -286,7 +286,7 @@ describe('View', function () {
         }
       })
       this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
-      this.view.render()
+      this.view.show()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
 
@@ -304,7 +304,7 @@ describe('View', function () {
         }
       }
       this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
-      this.view.render()
+      this.view.show()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John Brand Plumber</div></div>')
     })
 
@@ -316,7 +316,7 @@ describe('View', function () {
         }
       }
       this.view.template = '<div><div class="ui-element"><$name/> <$getSurname()/> <$proffesion.proffName/></div></div>'
-      this.view.render()
+      this.view.show()
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element">John getSurname() Plumber</div></div>')
     })
   })
@@ -351,8 +351,8 @@ describe('View', function () {
         template: '<div></div>'
       })
 
-      this.view.render()
-      this.view.showChild('uiElement', this.childView)
+      this.view.show()
+      this.view.show('uiElement', this.childView)
       this.childView.hide()
 
       expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div></div>')
@@ -370,8 +370,8 @@ describe('View', function () {
         template: '<div></div>'
       })
 
-      this.view.render()
-      this.view.showChild('uiElement', this.childView)
+      this.view.show()
+      this.view.show('uiElement', this.childView)
       this.view.hide()
 
       expect(this.rootEl.innerHTML).toBe('')
@@ -389,7 +389,7 @@ describe('View', function () {
         },
         template: '<div><div class="ui-element class1"></div><a></a></div>'
       })
-      this.view.render()
+      this.view.show()
     })
 
     it('should remove class from UI ', function () {
