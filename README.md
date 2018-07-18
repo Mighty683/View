@@ -1,3 +1,6 @@
+
+[![pipeline status](https://git.migum.eu/migum/View/badges/master/pipeline.svg)](https://git.migum.eu/migum/View/commits/master)
+
 # View
 Simple event driven View
 
