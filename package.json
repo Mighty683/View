@@ -1,6 +1,6 @@
 {
   "name": "event-driven-view",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Simple event driven view",
   "main": "index.js",
   "scripts": {
