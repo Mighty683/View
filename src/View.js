@@ -1,9 +1,9 @@
-const EventObject = require('event-driven-object')
-const Model = require('event-driven-object')
+const EventDriver = require('./Model')
+const Model = require('./Event-Driver')
 const HTMLEngine = require('./HTMLEngine')
 const UiFunctions = require('./uiFunctions')
 
-View.prototype = Object.create(EventObject.prototype)
+View.prototype = Object.create(EventDriver.prototype)
 
 View.prototype._show = function (options) {
   let withoutClear = options && options.withoutClear
@@ -136,7 +136,7 @@ View.prototype.hide = function () {
 }
 
 function View (options) {
-  EventObject.call(this)
+  EventDriver.call(this)
   if (options) {
     this.element = options.element || ''
     this.classList = options.classList || ''

@@ -135,7 +135,7 @@ view.removeChild(childView)
 You can use ```<$ variable />``` syntax to pass data into template.
 Data for template comes from View.templateData or from view.model.
 
-Data is kept inside Observable Model more info: https://www.npmjs.com/package/observable-model
+Data is kept inside Observable Model more info: ```src/Model/README.md```
 
 All data from model is visible inside template.
 

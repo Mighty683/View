@@ -1,5 +1,5 @@
-const View = require('../index.js')
-const Model = require('observable-model')
+const View = require('../index.js').View
+const Model = require('../index.js').Model
 
 describe('View', function () {
   beforeEach(function () {
