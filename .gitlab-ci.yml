@@ -3,10 +3,10 @@ image: node:6
 cache: 
   paths:
     - node_modules/
-deploy:
+test:
   stage: test
   before_script: 
     - npm install
   script:
-    - npm run test test:event
-    - npm run test test:model
+    - npm run test:event
+    - npm run test:model
