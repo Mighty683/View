@@ -41,6 +41,7 @@ Model.prototype._unset = function (attrName) {
     this.emit('change:' + attrName)
   }
 }
+
 Model.prototype.set = function (attr, value) {
   if (typeof attr === 'string') {
     this._setAttr(attr, value)

@@ -1,5 +1,5 @@
-const EventDriver = require('./Model')
-const Model = require('./Event-Driver')
+const EventDriver = require('./Event-Driver')
+const Model = require('./Model')
 const HTMLEngine = require('./HTMLEngine')
 const UiFunctions = require('./uiFunctions')
 

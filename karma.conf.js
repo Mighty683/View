@@ -1,5 +1,4 @@
-// Karma configuration
-// Generated on Tue Jun 19 2018 11:02:39 GMT+0200 (Central European Daylight Time)
+const path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -8,17 +7,20 @@ module.exports = function (config) {
     basePath: '',
 
     plugins: [
-      'karma-browserify',
       'karma-jasmine',
-      'karma-chrome-launcher'
+      'karma-coverage',
+      'karma-chrome-launcher',
+      'karma-webpack'
     ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'browserify'],
+    frameworks: [ 'jasmine' ],
 
     // list of files / patterns to load in the browser
     files: [
+      './index.js',
+      'src/**/*.js',
       'test/**/*.spec.js'
     ],
 
@@ -29,13 +31,33 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/**/*.spec.js': [ 'browserify' ]
+      './index.js': [ 'webpack' ],
+      'src/**/*.js': [ 'webpack' ],
+      'test/**/*.spec.js': [ 'webpack' ]
+    },
+
+    coverageReporter: {
+      type: 'text',
+      dir: 'coverage/'
+    },
+
+    webpack: {
+      module: {
+        rules: [
+          // instrument only testing sources with Istanbul
+          {
+            test: /\.js$/,
+            use: { loader: 'istanbul-instrumenter-loader' },
+            include: path.resolve('/')
+          }
+        ]
+      }
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
     // web server port
     port: 9876,
@@ -45,7 +67,7 @@ module.exports = function (config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_ERROR,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
