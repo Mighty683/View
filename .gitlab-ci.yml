@@ -9,5 +9,3 @@ test:
     - npm install
   script:
     - npm run test
-    - npm run test:event
-    - npm run test:model
