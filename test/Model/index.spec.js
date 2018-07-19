@@ -92,6 +92,25 @@ describe('Event-Driver', function () {
       expect(this.model.get('value')).toBe(2)
     })
 
+    it('should return true if no validation is present', function () {
+      this.model.set('value', 3)
+      this.isValid = this.model.validate('value', 4)
+
+      expect(this.model.get('value')).toBe(3)
+      expect(this.isValid).toBe(true)
+    })
+
+    it('should return false if no validation is present', function () {
+      this.model.set('value', 3)
+      this.model.setValidation('value', function (nextValue, prevValue) {
+        return nextValue < prevValue
+      })
+      this.isValid = this.model.validate('value', 4)
+
+      expect(this.model.get('value')).toBe(3)
+      expect(this.isValid).toBe(false)
+    })
+
     it('should remove validation', function () {
       this.model = new Model()
       this.model.set('value', 5)

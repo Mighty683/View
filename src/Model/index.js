@@ -22,7 +22,7 @@ Model.prototype.validate = function (attrName, nextVal) {
   if (this._validations && this._validations[attrName] instanceof Function) {
     return this._validations[attrName](nextVal, this.get('value'))
   } else {
-    return false
+    return true
   }
 }
 
