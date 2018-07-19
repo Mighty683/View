@@ -37,16 +37,15 @@ module.exports = function (config) {
     },
 
     coverageReporter: {
-      type: 'text-summary',
+      type: 'html',
       dir: 'coverage/'
     },
 
     webpack: {
       module: {
         rules: [
-          // instrument only testing sources with Istanbul
           {
-            test: /\.js$/,
+            test: /[^spec]\.js$/,
             use: { loader: 'istanbul-instrumenter-loader' },
             include: path.resolve('/')
           }
