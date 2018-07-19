@@ -45,9 +45,10 @@ module.exports = function (config) {
       module: {
         rules: [
           {
-            test: /[^spec]\.js$/,
+            test: /\.js$/,
             use: { loader: 'istanbul-instrumenter-loader' },
-            include: path.resolve('/')
+            include: path.resolve('/'),
+            exclude: path.resolve('test')
           }
         ]
       }
