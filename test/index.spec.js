@@ -21,7 +21,7 @@ describe('View', function () {
     })
   })
 
-  describe('showing', function () {
+  describe('rendering', function () {
     it('should show template', function () {
       this.view = new View({
         rootEl: this.rootEl,
@@ -33,137 +33,154 @@ describe('View', function () {
       expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
 
-    it('should wrap template', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>',
-        element: 'p'
+    describe('child views', function () {
+      it('should show empty element', function () {
+        this.view = new View({
+          rootEl: this.rootEl
+        })
+        this.view2 = new View({
+          element: 'p'
+        })
+
+        this.view.show(this.view2)
+
+        expect(this.rootEl.innerHTML).toBe('<p></p>')
       })
 
-      this.view.show()
+      it('should show view on rootEl', function () {
+        this.view = new View({
+          rootEl: this.rootEl
+        })
+        this.childView = new View({
+          template: '<a></a>',
+          element: 'p'
+        })
+        this.view.show(this.childView)
 
-      expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
+        expect(this.rootEl.innerHTML).toBe('<p><a></a></p>')
+      })
+
+      it('should hide elements', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>'
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.view.show(this.childView)
+        this.view.hide()
+
+        expect(this.rootEl.innerHTML).toBe('')
+      })
+
+      it('should hide child view from root El', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>'
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.view.show(this.childView)
+        this.view.removeChild(this.childView)
+
+        expect(this.rootEl.innerHTML).toBe('')
+      })
+
+      it('should hide child view from root El', function () {
+        this.view = new View({
+          rootEl: this.rootEl
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.view.show(this.childView)
+        this.view.removeChild('rootEl')
+
+        expect(this.rootEl.innerHTML).toBe('')
+      })
+
+      it('should show view on rootEl', function () {
+        this.view = new View({
+          rootEl: this.rootEl
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.view.show(this.childView, 'p')
+
+        expect(this.rootEl.innerHTML).toBe('<p><a></a></p>')
+      })
+
+      it('should show only template after showing view view on rootEl', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>'
+        })
+        this.childView = new View({
+          template: '<a></a>'
+        })
+        this.view.show(this.childView)
+        this.view.show()
+
+        expect(this.rootEl.innerHTML).toBe('<div></div>')
+      })
     })
 
-    it('should wrap template once', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>',
-        element: 'p'
+    describe('wrapping', function () {
+      it('should wrap template', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>',
+          element: 'p'
+        })
+
+        this.view.show()
+
+        expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
       })
 
-      this.view.show()
-      this.view.show()
+      it('should wrap template once', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>',
+          element: 'p'
+        })
 
-      expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
+        this.view.show()
+        this.view.show()
+
+        expect(this.rootEl.innerHTML).toBe('<p><div></div></p>')
+      })
     })
 
-    it('should add classes to el', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>',
-        classList: ['class', 'class1']
+    describe('adding class', function () {
+      it('should add classes to el', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>',
+          classList: ['class', 'class1']
+        })
+
+        this.view.show()
+
+        expect(this.rootEl.classList.contains('class')).toBeTruthy()
+        expect(this.rootEl.classList.contains('class1')).toBeTruthy()
       })
 
-      this.view.show()
+      it('should wrap template and add class', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<div></div>',
+          element: 'p',
+          classList: ['class']
+        })
 
-      expect(this.rootEl.classList.contains('class')).toBeTruthy()
-      expect(this.rootEl.classList.contains('class1')).toBeTruthy()
-    })
+        this.view.show()
 
-    it('should wrap template and add class', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>',
-        element: 'p',
-        classList: ['class']
+        expect(this.rootEl.innerHTML).toBe('<p class="class"><div></div></p>')
       })
-
-      this.view.show()
-
-      expect(this.rootEl.innerHTML).toBe('<p class="class"><div></div></p>')
-    })
-
-    it('should show view on rootEl', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView)
-
-      expect(this.rootEl.innerHTML).toBe('<a></a>')
-    })
-
-    it('should hide elements', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView)
-      this.view.hide()
-
-      expect(this.rootEl.innerHTML).toBe('')
-    })
-
-    it('should hide child view from root El', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView)
-      this.view.removeChild(this.childView)
-
-      expect(this.rootEl.innerHTML).toBe('')
-    })
-
-    it('should hide child view from root El', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView)
-      this.view.removeChild('rootEl')
-
-      expect(this.rootEl.innerHTML).toBe('')
-    })
-
-    it('should show view on rootEl', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView, 'p')
-
-      expect(this.rootEl.innerHTML).toBe('<p><a></a></p>')
-    })
-
-    it('should template after showing view view on rootEl', function () {
-      this.view = new View({
-        rootEl: this.rootEl,
-        template: '<div></div>'
-      })
-      this.childView = new View({
-        template: '<a></a>'
-      })
-      this.view.show(this.childView)
-      this.view.show()
-
-      expect(this.rootEl.innerHTML).toBe('<div></div>')
     })
 
     it('should emit render event', function () {
@@ -450,9 +467,88 @@ describe('View', function () {
     })
 
     it('should toggle class on UI ', function () {
-      this.view.getUI('uiElement').removeClass('class1')
-      this.view.getUI('link').toogleClass('class1')
-      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a class="class1"></a></div>')
+      this.view.getUI('uiElement').toogleClass('class1')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element"></div><a></a></div>')
+      this.view.getUI('uiElement').toogleClass('class1')
+      expect(this.rootEl.innerHTML).toBe('<div><div class="ui-element class1"></div><a></a></div>')
+    })
+  })
+
+  describe('utility functions', function () {
+    beforeEach(function () {
+      this.testFun = function () {}
+      spyOn(this, 'testFun')
+    })
+    describe('event listeners', function () {
+      it('should add event listener from string', function () {
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<a></a><a class="js-link"></a>',
+          ui: {
+            link: 'a',
+            link2: '.js-link'
+          },
+          uiEvents: {
+            'click @link': 'onLinkClick'
+          },
+          onLinkClick: function () {
+            return 'text'
+          }
+        })
+        spyOn(this.view, 'onLinkClick')
+
+        this.view.show()
+        this.view.getUI('link').click()
+
+        expect(this.view.onLinkClick).toHaveBeenCalled()
+      })
+
+      it('should add event listener from function', function () {
+        this.onLinkClick = function () {
+          console.error('kurwa')
+          return 'text'
+        }
+        spyOn(this, 'onLinkClick')
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<a></a><a class="js-link"></a>',
+          ui: {
+            link: 'a',
+            link2: '.js-link'
+          },
+          uiEvents: {
+            'click @link': this.onLinkClick
+          }
+        })
+
+        this.view.show()
+        this.view.getUI('link').click()
+
+        expect(this.onLinkClick).toHaveBeenCalled()
+      })
+
+      it('should add event listener add useCapture', function () {
+        this.onLinkClick = function () {
+          return 'text'
+        }
+        spyOn(this, 'onLinkClick')
+        this.view = new View({
+          rootEl: this.rootEl,
+          template: '<a></a><a class="js-link"></a>',
+          ui: {
+            link: 'a',
+            link2: '.js-link'
+          },
+          uiEvents: {
+            'click @link true': this.onLinkClick
+          }
+        })
+        spyOn(Element.prototype, 'addEventListener')
+
+        this.view.show()
+
+        expect(this.view.getUI('link').addEventListener).toHaveBeenCalledWith('click', this.onLinkClick, 'true')
+      })
     })
   })
 })

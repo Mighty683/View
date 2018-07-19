@@ -18,22 +18,14 @@ To render HTML template inside element use show:
 ```js
 let view = new View({
   rootEl: docEl,
-  element: 'div',
-  template: '<div><a>Link</a></div>',
-  templateData: {
-    name: 'John'
-  },
-  ui: {
-    link: 'a'
-  },
-  classList: ['wide', 'transparent']
+  template: '<div><a>Hello World</a></div>'
 })
 
 view.show()
 ```
 
 View options:
-- rootEl: element to whick view will be attached
+- rootEl: element to which view will be attached
 - element: view can be wrapped inside element, new element will be rootEl after render
 - classList: list of classes which will be added to root element
 - template: HTML template
@@ -61,7 +53,7 @@ let view = new View({
   // HTML: '<div><div class="ui-element"><div></div></div></div>'
 ```
 
-Remember ui elements are accesible after render.
+Ui elements are accesible after render.
 
 ```js
 let view = new View({

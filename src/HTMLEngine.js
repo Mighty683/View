@@ -38,7 +38,7 @@ HTMLEngine.evalString = function (string, data) {
   if (Object.keys(data).length > 0) {
     return findKeys(string, replaceKeys.bind(this, data))
   } else {
-    return string
+    return string || ''
   }
 }
 

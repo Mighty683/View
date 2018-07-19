@@ -47,9 +47,12 @@ EventEmiter.prototype.emit = function (eventName) {
   if (_events[this._listenId]) {
     Object.keys(_events[this._listenId]).forEach(function (key) {
       if (key === eventName) {
-        Object.values(_events[this._listenId][key]).forEach(function (cb) {
-          result = cb.apply(null, Array.prototype.slice.call(args).slice(1))
-        })
+        var eventsArray = _events[this._listenId][key]
+        for (var prop in eventsArray) {
+          if (eventsArray.hasOwnProperty(prop)) {
+            result = eventsArray[prop].apply(null, Array.prototype.slice.call(args).slice(1))
+          }
+        }
       }
     }.bind(this))
   }

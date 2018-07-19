@@ -1,5 +1,4 @@
 const EventDriver = require('./Event-Driver')
-const Model = require('./Model')
 const HTMLEngine = require('./HTMLEngine')
 const UiFunctions = require('./uiFunctions')
 
@@ -14,11 +13,6 @@ View.prototype._show = function (options) {
   } else {
     this._render(this.rootEl, withoutClear)
   }
-  this._rendered = true
-  this.emit('render', this)
-  if (typeof this.onRender === 'function') {
-    this.onRender(this)
-  }
 }
 
 View.prototype._render = function (element, withoutClear) {
@@ -29,6 +23,12 @@ View.prototype._render = function (element, withoutClear) {
     UiFunctions.addClass.call(element, this.classList)
   }
   this.mapUI()
+  this._setEvents()
+  this._rendered = true
+  this.emit('render', this)
+  if (typeof this.onRender === 'function') {
+    this.onRender(this)
+  }
   return element
 }
 
@@ -135,19 +135,34 @@ View.prototype.hide = function () {
   this.emit('hide', this)
 }
 
+View.prototype._setEvents = function () {
+  if (this.uiEvents) {
+    for (var prop in this.uiEvents) {
+      if (this.uiEvents.hasOwnProperty(prop)) {
+        var ar = prop.split(/ @| /)
+        var fun = null
+        if (typeof this.uiEvents[prop] === 'string') {
+          fun = this[this.uiEvents[prop]]
+        } else if (typeof this.uiEvents[prop] === 'function') {
+          fun = this.uiEvents[prop]
+        }
+        this.getUI(ar[1]).addEventListener(ar[0], fun, ar[2])
+      }
+    }
+  }
+}
+
 function View (options) {
   EventDriver.call(this)
-  if (options) {
-    this.element = options.element || ''
-    this.classList = options.classList || ''
-    this.rootEl = options.rootEl
-    this.ui = options.ui
-    this.template = options.template
-    this.templateData = options.templateData
-    this.model = options.model || new Model()
-  }
   this._childViews = {}
   this._ui = {}
+  if (options) {
+    for (var prop in options) {
+      if (options.hasOwnProperty(prop)) {
+        this[prop] = options[prop]
+      }
+    }
+  }
 }
 
 module.exports = View
