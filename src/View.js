@@ -1,6 +1,7 @@
 var EventDriver = require('./Event-Driver')
 var HTMLEngine = require('./HTMLEngine')
 var UiFunctions = require('./uiFunctions')
+var polyFills = require('./polyFills.js')
 
 View.prototype = Object.create(EventDriver.prototype)
 
@@ -61,7 +62,7 @@ View.prototype.clear = function () {
 View.prototype._evalTemplate = function () {
   var templateData = this.templateData || {}
   var modelData = this.model && this.model._attributes ? this.model._attributes : {}
-  var data = Object.assign(modelData, templateData)
+  var data = polyFills.assign(modelData, templateData)
   return HTMLEngine.evalString(this.template, data)
 }
 
@@ -79,7 +80,7 @@ View.prototype.mapUI = function () {
 }
 
 View.prototype.getUI = function (uiName) {
-  return Object.assign(this._ui[uiName], UiFunctions)
+  return polyFills.assign(this._ui[uiName], UiFunctions)
 }
 
 View.prototype._showCollection = function (uiName, childViews, element) {
