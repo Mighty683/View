@@ -1,13 +1,13 @@
-const EventDriver = require('./Event-Driver')
-const HTMLEngine = require('./HTMLEngine')
-const UiFunctions = require('./uiFunctions')
+var EventDriver = require('./Event-Driver')
+var HTMLEngine = require('./HTMLEngine')
+var UiFunctions = require('./uiFunctions')
 
 View.prototype = Object.create(EventDriver.prototype)
 
 View.prototype._show = function (options) {
-  let withoutClear = options && options.withoutClear
+  var withoutClear = options && options.withoutClear
   if (this.element && !this._rendered) {
-    let element = this._render(document.createElement(this.element), withoutClear)
+    var element = this._render(document.createElement(this.element), withoutClear)
     this.rootEl.insertAdjacentElement('beforeend', element)
     this.rootEl = element
   } else {
@@ -18,12 +18,10 @@ View.prototype._show = function (options) {
 View.prototype._render = function (element, withoutClear) {
   element = element || this.rootEl
   withoutClear || this.clear()
-  element.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
-  if (this.classList) {
-    UiFunctions.addClass.call(element, this.classList)
-  }
-  this.mapUI()
-  this._setEvents()
+  this.template && element.insertAdjacentHTML('beforeend', this._evalTemplate(this.template))
+  this.classList && UiFunctions.addClass.call(element, this.classList)
+  this.ui && this.mapUI()
+  this.uiEvents && this._setEvents()
   this._rendered = true
   this.emit('render', this)
   if (typeof this.onRender === 'function') {
@@ -34,7 +32,7 @@ View.prototype._render = function (element, withoutClear) {
 
 View.prototype.show = function () {
   if (arguments[0] instanceof View) {
-    let view = arguments[0]
+    var view = arguments[0]
     view.rootEl = this.rootEl
     view.element = view.element || arguments[1]
     this._childViews['rootEl'] = view
@@ -61,18 +59,18 @@ View.prototype.clear = function () {
 }
 
 View.prototype._evalTemplate = function () {
-  let templateData = this.templateData || {}
-  let modelData = this.model && this.model._attributes ? this.model._attributes : {}
-  let data = Object.assign(modelData, templateData)
+  var templateData = this.templateData || {}
+  var modelData = this.model && this.model._attributes ? this.model._attributes : {}
+  var data = Object.assign(modelData, templateData)
   return HTMLEngine.evalString(this.template, data)
 }
 
 View.prototype.mapUI = function () {
   if (this.ui) {
     Object.keys(this.ui).forEach(function (key) {
-      let uiElement = this.rootEl.querySelector(this.ui[key])
+      var uiElement = this.rootEl.querySelector(this.ui[key])
       if (!uiElement) {
-        throw Error('No matching UI element found"' + key)
+        throw Error('No matching UI element found: ' + key)
       }
       this._ui[key] = uiElement
     }.bind(this))
@@ -136,18 +134,16 @@ View.prototype.hide = function () {
 }
 
 View.prototype._setEvents = function () {
-  if (this.uiEvents) {
-    for (var prop in this.uiEvents) {
-      if (this.uiEvents.hasOwnProperty(prop)) {
-        var ar = prop.split(/ @| /)
-        var fun = null
-        if (typeof this.uiEvents[prop] === 'string') {
-          fun = this[this.uiEvents[prop]]
-        } else if (typeof this.uiEvents[prop] === 'function') {
-          fun = this.uiEvents[prop]
-        }
-        this.getUI(ar[1]).addEventListener(ar[0], fun, ar[2])
+  for (var prop in this.uiEvents) {
+    if (this.uiEvents.hasOwnProperty(prop)) {
+      var ar = prop.split(/ @| /)
+      var fun = null
+      if (typeof this.uiEvents[prop] === 'string') {
+        fun = this[this.uiEvents[prop]]
+      } else if (typeof this.uiEvents[prop] === 'function') {
+        fun = this.uiEvents[prop]
       }
+      this.getUI(ar[1]).addEventListener(ar[0], fun, ar[2])
     }
   }
 }

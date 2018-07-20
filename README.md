@@ -11,7 +11,7 @@ Simple event driven View
 
 ## Features
 
-View is basic 'brick' of framework. Use it as View or as Controller to render other views.
+View is basic 'brick' of framework. Use it to show and control content on page.
 
 ### Show
 To render HTML template inside element use show:
@@ -32,28 +32,11 @@ View options:
 - model: instance of observable-model
 - templateData: data passed for template parsing
 - ui: elements for controlling view and rendering childviews every view after render has 'rootEl' ui element
+- uiEvents: array of UI events
 
-### Show Child
+### Show Child View
 
-You can pass another view to show inside on choosen element
-
-```js
-let view = new View({
-    rootEl: this.rootEl,
-    ui: {
-      uiElement: '.ui-element'
-    },
-    template: '<div><div class="ui-element"></div></div>'
-  }),
-  childView = new View({
-    template: '<div></div>'
-  })
-  view.render()
-  view.show('uiElement', childView)
-  // HTML: '<div><div class="ui-element"><div></div></div></div>'
-```
-
-Ui elements are accesible after render.
+View can show another View inside itself or in choosen element.
 
 ```js
 let view = new View({
@@ -67,10 +50,26 @@ let view = new View({
     template: '<a></a>'
   })
   view.render()
-  view.show(childView, 'p')
-  // HTML: '<div><div class="ui-element"><p><a></a></p></div></div>'
+  view.show('uiElement', childView)
+  // HTML: '<div><div class="ui-element"><a></a></div></div>'
 ```
-You can show another view inside of view instead of using template. You can wrap child view inside of element(optional)
+
+Ui elements are accesible after render.
+
+```js
+let view = new View({
+    rootEl: this.rootEl
+  }),
+  childView = new View({
+    template: '<a></a>'
+  })
+  view.render()
+  view.show(childView)
+  // HTML: '<a></a>'
+  view.show(childView, 'p')
+  // HTML: '<p><a></a></p>'
+```
+View can show another view inside of view instead of using template. You can wrap child view inside of element(optional)
 
 
 
@@ -115,7 +114,7 @@ let view = new View({
 ```
 
 
-You can remove child view by selecting ui element or passing child View object.
+View can remove child view by selecting ui element or passing child View object.
 If ui element has collection of views all will be removed.
 ```js
 view.removeChild('uiElement')
@@ -124,14 +123,40 @@ view.removeChild('uiElement')
 ```js
 view.removeChild(childView)
 ```
+### UI Events
 
+View can attach event listeners to UI elements
+
+```js
+let view = new View({
+    rootEl: this.rootEl,
+    ui: {
+      link: '.link',
+      linkSecond: '.link_second'
+    }
+    uiEvents: {
+      'click @link': 'onLinkClick',
+      'click @linkSecond false': function () {
+         console.log('click')
+      }
+    },
+    onLinkClick: function () {
+      return 'text'
+    }
+  })
+  /*
+    Eq to:
+     view.getUI('link').addEventListener('click', view.onLinkClick)
+     view.getUI('linkSecond').addEventListener('click, function ..., false)
+  */
+```
 
 ### Template 
 
-You can use ```<$ variable />``` syntax to pass data into template.
+View can use ```<$ variable />``` syntax to pass data into template.
 Data for template comes from View.templateData or from view.model.
 
-Data is kept inside Observable Model more info: ```src/Model/README.md```
+Data is kept inside Model more info: ```src/Model/README.md```
 
 All data from model is visible inside template.
 

@@ -6,16 +6,13 @@ EventEmiter.prototype._setEvent = function (listenId, eventName, callback) {
     if (_events[this._listenId][eventName]) {
       _events[this._listenId][eventName][listenId] = callback
     } else {
-      _events[this._listenId][eventName] = {
-        [listenId]: callback
-      }
+      _events[this._listenId][eventName] = {}
+      _events[this._listenId][eventName][listenId] = callback
     }
   } else {
-    _events[this._listenId] = {
-      [eventName]: {
-        [listenId]: callback
-      }
-    }
+    _events[this._listenId] = {}
+    _events[this._listenId][eventName] = {}
+    _events[this._listenId][eventName][listenId] = callback
   }
 }
 
@@ -31,7 +28,7 @@ EventEmiter.prototype.on = function (eventName, callback) {
 
 EventEmiter.prototype.once = function (eventName, callback) {
   this.on(eventName, function () {
-    let result = callback.apply(null, Array.prototype.slice.call(arguments))
+    var result = callback.apply(null, Array.prototype.slice.call(arguments))
     this.off(eventName)
     return result
   }.bind(this))
@@ -42,8 +39,8 @@ EventEmiter.prototype.off = function (eventName) {
 }
 
 EventEmiter.prototype.emit = function (eventName) {
-  let args = arguments
-  let result
+  var args = arguments
+  var result
   if (_events[this._listenId]) {
     Object.keys(_events[this._listenId]).forEach(function (key) {
       if (key === eventName) {

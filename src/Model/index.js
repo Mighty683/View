@@ -1,4 +1,4 @@
-const EventEmiter = require('../Event-Driver')
+var EventEmiter = require('../Event-Driver')
 
 Model.prototype = Object.create(EventEmiter.prototype)
 
