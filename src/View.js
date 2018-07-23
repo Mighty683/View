@@ -62,7 +62,7 @@ View.prototype.clear = function () {
 View.prototype._evalTemplate = function () {
   var templateData = this.templateData || {}
   var modelData = this.model && this.model._attributes ? this.model._attributes : {}
-  var data = polyFills.assign(modelData, templateData)
+  var data = polyFills._assign(modelData, templateData)
   return HTMLEngine.evalString(this.template, data)
 }
 
@@ -80,7 +80,7 @@ View.prototype.mapUI = function () {
 }
 
 View.prototype.getUI = function (uiName) {
-  return polyFills.assign(this._ui[uiName], UiFunctions)
+  return polyFills._assign(this._ui[uiName], UiFunctions)
 }
 
 View.prototype._showCollection = function (uiName, childViews, element) {

@@ -1,6 +1,6 @@
-function assign (target, varArgs) {
+function _assign (target, varArgs) {
   if (target == null) {
-    throw new TypeError('Cannot convert undefined or null to object');
+    throw new TypeError('Cannot convert undefined or null to object')
   }
   var to = Object(target)
 
@@ -20,5 +20,5 @@ function assign (target, varArgs) {
 }
 
 module.exports = {
-  assign: assign
+  _assign: _assign
 }
