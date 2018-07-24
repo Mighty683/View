@@ -4,6 +4,7 @@
   "description": "Simple event driven view",
   "main": "index.js",
   "scripts": {
+    "eslint": "standard",
     "test": "karma start --single-run",
     "test:event": "node src/Event-Driver/test/index.js",
     "test:model": "node src/Model/test/index.js",
@@ -26,6 +27,17 @@
     "url": "https://github.com/Mighty683/View/issues"
   },
   "homepage": "https://github.com/Mighty683/View#readme",
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "expect",
+      "beforeEach",
+      "afterEach",
+      "spyOn",
+      "Element"
+    ]
+  },
   "devDependencies": {
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^3.1.0",
@@ -36,6 +48,7 @@
     "karma-jasmine": "^1.1.2",
     "karma-webpack": "^3.0.0",
     "puppeteer": "^1.5.0",
+    "standard": "^11.0.1",
     "webpack": "^4.16.1"
   }
 }
